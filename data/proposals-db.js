@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const assert =  require("assert")
-const 
 
 const url = "mongodb://localhost:27017/proposals-db";
 const heroku_url = process.env.MONGODB_URI
