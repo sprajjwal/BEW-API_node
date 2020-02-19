@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const assert =  require("assert")
+const 
 
 const url = "mongodb://localhost:27017/proposals-db";
-const heroku_url = "mongodb://<dbuser>:<dbpassword>@ds229118.mlab.com:29118/heroku_4gm3n5zp"
+const heroku_url = process.env.MONGODB_URI
 mongoose.Promise = global.Promise;
 mongoose.connect(
   heroku_url,
