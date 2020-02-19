@@ -14,7 +14,7 @@ module.exports = (app) => {
         console.log(user)
         const token = jwt.sign({_id: user._id}, process.env.SECRET, {expiresIn: "60 days"})
         res.cookie('pToken', token, { maxAge: 900000, httpOnly: true });
-        res.send({status: 200, message:"Success: Signed up", token:token})
+        return res.send({status: 200, message:"Success: Signed up", token:token})
       })
       .catch(err => {
         return res.send({status: 200, message:"Error: User name taken", err: err["errmsg"] });
@@ -49,6 +49,7 @@ module.exports = (app) => {
     })
     .catch(err => {
       console.log(err);
+      return res.send({status: 400, message: "Failed: Unauthorized login"})
     });
   });
   
