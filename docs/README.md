@@ -69,3 +69,92 @@ The API will respond with a response that looks like the following:
 A GET method that clears out any cookies on your browser. Does not need to be called if cookies don't apply. GET requests can be made to:
 
 `https://confessions-api.herokuapp.com/logout`
+
+#### Getting all proposals
+
+A GET method that returns a JSON with all proposals made by a student. GET requests can be made to:
+
+`https://confessions-api.herokuapp.com/proposals`
+
+The API will respond with a JSON that looks like the following:
+
+```JSON
+  [
+    {
+      "id": 0,
+      "title": "me title 1",
+      "summary": "big boy proposal 1"
+    },
+    ...
+  ]
+```
+
+#### Sending new proposals
+
+A POST method that takens a JSON and adds a new proposal for *Student* users. POST requests can be made to:
+
+`https://confessions-api.herokuapp.com/proposals/new`
+
+The API will respond with:
+
+```JSON
+  response = {
+                status: 200,
+                message: "Success: Proposal added"
+              }
+```
+
+#### Viewing a particular proposal
+
+A GET method that returns a JSON with a particular proposal with given id. GET requests can be made to:
+
+`https://confessions-api.herokuapp.com/proposal/<id>`
+
+The API will respond with a JSON that looks like the following:
+
+```JSON
+  {
+    "title": "me title 1",
+    "summary": "big boy proposal 1"
+  }
+```
+
+#### Update a particular proposal
+
+A POST method that returns a JSON with a confirmation after updating a proposal at the given id. POST requests can be made to:
+
+`https://confessions-api.herokuapp.com/proposal/<id>/update`
+
+The body needs have the following format or the update will be rejected.
+
+```JSON
+  {
+    title: "NEW TITLE",
+    summary: "SUMMARY",
+    token: token
+  }
+```
+
+The API will respond with:
+
+```JSON
+  response = {
+                status: 200,
+                message: "Success: Proposal updated"
+              }
+```
+
+#### Delete a particular proposal
+
+A POST method that returns a JSON with a confirmation after deleting a proposal at the given id. POST requests can be made to:
+
+`https://confessions-api.herokuapp.com/proposal/<id>/delete`
+
+The API will respond with:
+
+```JSON
+  response = {
+                status: 200,
+                message: "Success: Proposal deleted"
+              }
+```
