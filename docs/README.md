@@ -81,9 +81,9 @@ The API will respond with a JSON that looks like the following:
 ```JSON
   [
     {
-      "id": 0,
-      "title": "me title 1",
-      "summary": "big boy proposal 1"
+      id: 0,
+      title: "me title 1",
+      summary: "big boy proposal 1"
     },
     ...
   ]
@@ -91,9 +91,20 @@ The API will respond with a JSON that looks like the following:
 
 #### Sending new proposals
 
-A POST method that takens a JSON and adds a new proposal for *Student* users. POST requests can be made to:
+A POST method that takens a JSON and adds a new proposal for  users. POST requests can be made to:
 
 `https://confessions-api.herokuapp.com/proposals/new`
+
+with the following data:
+
+```JSON
+  {
+    title: Proposal Title,
+    summary: Proposal summary,
+    token: Token,
+    recepient: recepient_username
+  }
+```
 
 The API will respond with:
 
@@ -114,8 +125,8 @@ The API will respond with a JSON that looks like the following:
 
 ```JSON
   {
-    "title": "me title 1",
-    "summary": "big boy proposal 1"
+    title: "me title 1",
+    summary: "big boy proposal 1"
   }
 ```
 

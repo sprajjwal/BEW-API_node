@@ -6,7 +6,8 @@ const Populate = require("../utils/autopopulate")
 const UserSchema = new Schema({
   username: {type: String, unique: true, required: true},
   password: {type: String, require: true},
-  proposals: [{type: Schema.Types.ObjectId, ref:"Proposal"}]
+  outgoing_proposals: [{type: Schema.Types.ObjectId, ref:"Proposal"}],
+  incoming_proposals: [{type: Schema.Types.ObjectId, ref:"Proposal"}]
 })
 
 UserSchema.pre("save", function(next) {
@@ -28,8 +29,12 @@ UserSchema.methods.comparePassword = function(password, done) {
 };
 
 UserSchema
-  .pre('findOne', Populate('proposals'))
-  .pre('find', Populate('proposals'))
+  .pre('findOne', Populate('outgoing_proposals'))
+  .pre('findOne', Populate('incoming_proposals'))
+  .pre('find', Populate('outgoing_proposals'))
+  .pre('find', Populate('incoming_proposals'))
+  .pre('findById', Populate('outgoing_proposals'))
+  .pre('findById', Populate('incoming_proposals'))
   
 
 module.exports = mongoose.model("User", UserSchema)
