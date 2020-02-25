@@ -3,6 +3,31 @@ const User = require('../models/users')
 
 module.exports = (app) => {
 
+  // create new proposal for a user
+  app.post("/new_proposal", (req, res) => {
+    if (!req.user) {
+      return res.send({status: 401, message: "Unauthenticated request"})
+    }
+    const proposal = new Proposal(req.body);
+    User.findById(req.user._id)
+      .then(user => {
+        proposal.author = user.username
+        user.outgoing_proposals.push(proposal);
+        User.findOne({username: req.body.recipient})
+          .then(rec => {
+            rec.incoming_proposals.push(proposal)
+            rec.save()
+            user.save()
+            proposal.save()
+            return res.send({status: 200, message: "Success: Proposal added"})
+          })
+      })
+      .catch(err => {
+        console.log(err)
+        return res.send({status: 400, message: "Error", err: err})
+      })
+  })
+
   // Show all proposals for a user
   app.get("/outgoing_proposals", (req, res) => {
     if (!req.user) {
@@ -51,31 +76,6 @@ module.exports = (app) => {
       })
   })
 
-  // create new proposal for a user
-  app.post("/new_proposal", (req, res) => {
-    if (!req.user) {
-      return res.send({status: 401, message: "Unauthenticated request"})
-    }
-    const proposal = new Proposal(req.body);
-    proposal.author = req.user._id
-    User.findById(req.user._id)
-      .then(user => {
-        user.outgoing_proposals.push(proposal);
-        User.findOne({username: req.body.recipient})
-          .then(rec => {
-            proposal.recipient = rec._id
-            rec.incoming_proposals.push(proposal)
-            rec.save()
-            user.save()
-            proposal.save()
-            return res.send({status: 200, message: "Success: Proposal added"})
-          })
-      })
-      .catch(err => {
-        console.log(err)
-        return res.send({status: 400, message: "Error", err: err})
-      })
-  })
 
   app.get('/outgoing_proposals/:id', (req, res) => {
     if (!req.user) {
@@ -88,7 +88,7 @@ module.exports = (app) => {
           return res.send({status: 401, message: "Error: Invalid id"})
         }
         proposal = user.outgoing_proposals[num]
-        User.findById(proposal.recipient)
+        User.findOne({username: proposal.recipient})
           .then(recipient => {
             return res.send({
               title: proposal.title, 
@@ -116,7 +116,7 @@ module.exports = (app) => {
         }
         
         proposal = user.incoming_proposals[num]
-        User.findById(proposal.author)
+        User.findOne({username: proposal.author})
           .then(author => {
             console.log(proposal)
             return res.send({
@@ -168,7 +168,7 @@ module.exports = (app) => {
     const num = parseInt(req.params.id)
     User.findById(req.user._id)
       .then(user => {
-        User.findById(user.outgoing_proposals[num].recipient)
+        User.findOne({username: user.outgoing_proposals[num].recipient})
           .then(recipient => {
             recipient_index = recipient.incoming_proposals.findIndex(obj => 
               String(obj._id) === String(user.outgoing_proposals[num]._id))

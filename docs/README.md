@@ -70,30 +70,11 @@ A GET method that clears out any cookies on your browser. Does not need to be ca
 
 `https://confessions-api.herokuapp.com/logout`
 
-#### Getting all proposals
-
-A GET method that returns a JSON with all proposals made by a student. GET requests can be made to:
-
-`https://confessions-api.herokuapp.com/proposals`
-
-The API will respond with a JSON that looks like the following:
-
-```JSON
-  [
-    {
-      id: 0,
-      title: "me title 1",
-      summary: "big boy proposal 1"
-    },
-    ...
-  ]
-```
-
 #### Sending new proposals
 
-A POST method that takens a JSON and adds a new proposal for  users. POST requests can be made to:
+A POST method that takens a JSON and adds a new proposal for users. POST requests(with token) can be made to:
 
-`https://confessions-api.herokuapp.com/proposals/new`
+`https://confessions-api.herokuapp.com/new_proposal`
 
 with the following data:
 
@@ -115,24 +96,81 @@ The API will respond with:
               }
 ```
 
-#### Viewing a particular proposal
+#### Getting all outgoing proposals
 
-A GET method that returns a JSON with a particular proposal with given id. GET requests can be made to:
+A GET method that returns a JSON with all outgoing proposals made by a student. GET requests(with token) can be made to:
 
-`https://confessions-api.herokuapp.com/proposal/<id>`
+`https://confessions-api.herokuapp.com/outgoing_proposals`
+
+The API will respond with a JSON that looks like the following:
+
+```JSON
+  [
+    {
+      id: 0,
+      title: "Sample Title",
+      summary: "Sample summary"
+      recipient: recipient_username
+    },
+    ...
+  ]
+```
+
+#### Getting all incoming proposals
+
+A GET method that returns a JSON with all incoming proposals made by a user. GET requests(with token) can be made to:
+
+`https://confessions-api.herokuapp.com/incoming_proposals`
+
+The API will respond with a JSON that looks like the following:
+
+```JSON
+  [
+    {
+      id: 0,
+      title: "Sample Title",
+      summary: "Sample summary"
+      author: "AUTHOR_USERNAME"
+    },
+    ...
+  ]
+```
+
+#### Viewing a particular outgoing proposal
+
+A GET method that returns a JSON with a particular outgoing proposal with given id. GET requests(with token) can be made to:
+
+`https://confessions-api.herokuapp.com/outgoing_proposal/<id>`
 
 The API will respond with a JSON that looks like the following:
 
 ```JSON
   {
-    title: "me title 1",
-    summary: "big boy proposal 1"
+    title: "Sample Title",
+    summary: "Sample Summary",
+    author: "AUTHOR_USERNAME"
+  }
+```
+
+#### Viewing a particular incoming proposal
+
+A GET method that returns a JSON with a particular proposal with given id. GET requests(with token) can be made to:
+
+`https://confessions-api.herokuapp.com/incoming_proposal/<id>`
+
+The API will respond with a JSON that looks like the following:
+
+```JSON
+  {
+    title: "Sample Title",
+    summary: "Sample Summary",
+    author: "AUTHOR_USERNAME"
   }
 ```
 
 #### Update a particular proposal
 
-A POST method that returns a JSON with a confirmation after updating a proposal at the given id. POST requests can be made to:
+A POST method that returns a JSON with a confirmation after updating a proposal at the given id. POST requests(with token) can be made to:
 
 `https://confessions-api.herokuapp.com/proposal/<id>/update`
 
@@ -157,7 +195,7 @@ The API will respond with:
 
 #### Delete a particular proposal
 
-A POST method that returns a JSON with a confirmation after deleting a proposal at the given id. POST requests can be made to:
+A POST method that returns a JSON with a confirmation after deleting a proposal at the given id. POST requests(with token) can be made to:
 
 `https://confessions-api.herokuapp.com/proposal/<id>/delete`
 
