@@ -6,7 +6,7 @@ module.exports = (app) => {
   // create new proposal for a user
   app.post("/new_proposal", (req, res) => {
     if (!req.user) {
-      return res.send({status: 401, message: "Unauthenticated request"})
+      return res.status(401).send({status: 401, message: "Unauthenticated request"})
     }
     const proposal = new Proposal(req.body);
     User.findById(req.user._id)
@@ -19,19 +19,19 @@ module.exports = (app) => {
             rec.save()
             user.save()
             proposal.save()
-            return res.send({status: 200, message: "Success: Proposal added"})
+            return res.status(200).send({status: 200, message: "Success: Proposal added"})
           })
       })
       .catch(err => {
         console.log(err)
-        return res.send({status: 400, message: "Error", err: err})
+        return res.status(401).send({status: 401, message: "Error", err: err})
       })
   })
 
   // Show all proposals for a user
   app.get("/outgoing_proposals", (req, res) => {
     if (!req.user) {
-      return res.send({status: 401, message: "Unauthenticated request"})
+      return res.status(401).send({status: 401, message: "Unauthenticated request"})
     }
     
     User.findById(req.user._id)
@@ -44,18 +44,18 @@ module.exports = (app) => {
             summary: proposal.summary, 
             recipient: proposal.recipient}
         })
-        return res.send({status: 200, message: "Success:", proposals: payload})
+        return res.status(200).send({status: 200, message: "Success:", proposals: payload})
       })
       .catch(err => {
         console.log(err)
-        return res.send({statu: 400, message: "Error", err: err})
+        return res.status(401).send({statu: 401, message: "Error", err: err})
       })
   })
 
   // Show all proposals for a user
   app.get("/incoming_proposals", (req, res) => {
     if (!req.user) {
-      return res.send({status: 401, message: "Unauthenticated request"})
+      return res.status(401).send({status: 401, message: "Unauthenticated request"})
     }
     
     User.findById(req.user._id)
@@ -68,24 +68,24 @@ module.exports = (app) => {
             author: proposal.author,
           }
         })
-        return res.send({status: 200, message: "Success:", proposals: payload})
+        return res.status(200).send({status: 200, message: "Success:", proposals: payload})
       })
       .catch(err => {
         console.log(err)
-        return res.send({statu: 400, message: "Error", err: err})
+        return res.status(401).send({statu: 401, message: "Error", err: err})
       })
   })
 
 
   app.get('/outgoing_proposals/:id', (req, res) => {
     if (!req.user) {
-      return res.send({status: 401, message: "Unauthenticated request"})
+      return res.status(401).send({status: 401, message: "Unauthenticated request"})
     }
     const num = parseInt(req.params.id)
     User.findById(req.user._id)
       .then(user => {
         if (num >= Object.keys(user.outgoing_proposals).length){
-          return res.send({status: 401, message: "Error: Invalid id"})
+          return res.status(401).send({status: 401, message: "Error: Invalid id"})
         }
         proposal = user.outgoing_proposals[num]
         User.findOne({username: proposal.recipient})
@@ -100,19 +100,19 @@ module.exports = (app) => {
       })
       .catch(err => {
         console.log(err)
-        return res.send({status: 400, message: "Error", err: err})
+        return res.status(401).send({status: 401, message: "Error", err: err})
       })
   })
 
   app.get('/incoming_proposals/:id', (req, res) => {
     if (!req.user) {
-      return res.send({status: 401, message: "Unauthenticated request"})
+      return res.status(401).send({status: 401, message: "Unauthenticated request"})
     }
     const num = parseInt(req.params.id)
     User.findById(req.user._id)
       .then(user => {
         if (num >= Object.keys(user.incoming_proposals).length){
-          return res.send({status: 401, message: "Error: Invalid id"})
+          return res.status(401).send({status: 401, message: "Error: Invalid id"})
         }
         
         proposal = user.incoming_proposals[num]
@@ -130,14 +130,14 @@ module.exports = (app) => {
       })
       .catch(err => {
         console.log(err)
-        return res.send({status: 400, message: "Error", err: err})
+        return res.status(401).send({status: 401, message: "Error", err: err})
       })
   })
 
   // Update a proposal at given index
   app.post('/outgoing_proposals/:id/update', (req, res) => {
     if (!req.user) {
-      return res.send({status: 401, message: "Unauthenticated request"})
+      return res.status(401).send({status: 401, message: "Unauthenticated request"})
     }
     new_prop = req.body
     if (new_prop.title != null && new_prop.summary != null) {
@@ -149,12 +149,12 @@ module.exports = (app) => {
               proposal.title = new_prop.title;
               proposal.summary = new_prop.summary
               proposal.save()
-              return res.send({status: 200, message: "Success: Proposal updated"})
+              return res.status(200).send({status: 200, message: "Success: Proposal updated"})
             })
         })
         .catch(err => {
           console.log(err)
-          return res.send({status: 400, message: "Error", err: err})
+          return res.status(401).send({status: 401, message: "Error", err: err})
         })
     }
     
@@ -163,7 +163,7 @@ module.exports = (app) => {
   // delete a proposal using id for a user
   app.post('/outgoing_proposals/:id/delete', (req, res) => {
     if (!req.user) {
-      return res.send({status: 401, message: "Unauthenticated request"})
+      return res.status(401).send({status: 401, message: "Unauthenticated request"})
     }
     const num = parseInt(req.params.id)
     User.findById(req.user._id)
@@ -177,13 +177,13 @@ module.exports = (app) => {
             Proposal.deleteOne({_id: user.outgoing_proposals[num]._id})
             user.outgoing_proposals.splice(num)
             user.save()
-            return res.send({status: 200, message: "Success: Proposal deleted"})
+            return res.status(200).send({status: 200, message: "Success: Proposal deleted"})
           })
         
       })
       .catch(err => {
         console.log(err)
-        return res.send({status: 400, message: "Error", err: err})
+        return res.status(401).send({status: 401, message: "Error", err: err})
       })
   })
 
@@ -200,12 +200,12 @@ module.exports = (app) => {
           .then(proposal => {
             proposal.approved = true
             proposal.save()
-            return res.send({status: 200, message: "Success: Proposal approved"})
+            return res.status(200).send({status: 200, message: "Success: Proposal approved"})
           })
       })
       .catch(err => {
         console.log(err)
-        return res.send({status: 400, message: "Error", err: err})
+        return res.status(401).send({status: 401, message: "Error", err: err})
       })
   })
 }
