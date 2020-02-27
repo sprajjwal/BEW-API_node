@@ -48,7 +48,7 @@ with username and password as queries. This should either return a [JWT](http://
 
 #### Login
 
-A GET method that returns a JSON and sets cookie with an authenticated JWT token. GET requests can be made to:
+A POST method that returns a JSON and sets cookie with an authenticated JWT token. POST requests can be made to:
 
 `https://confessions-api.herokuapp.com/login`
 
