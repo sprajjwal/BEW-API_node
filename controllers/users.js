@@ -25,6 +25,7 @@ module.exports = (app) => {
   app.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    console.log()
 
     User.findOne({ username}, "username password")
     .then(user => {
@@ -36,7 +37,7 @@ module.exports = (app) => {
       user.comparePassword(password, (err, isMatch) => {
         if (!isMatch) {
           // Password does not match
-          return res.status(401).json({ status: 401, message: "Error: Wrong Username or Password" });
+          return res.status(401).json({ status: 402, message: "Error: Wrong Username or Password" });
         }
         // Create a token
         const token = jwt.sign({ _id: user._id, username: user.username }, process.env.SECRET, {
@@ -44,12 +45,12 @@ module.exports = (app) => {
         });
         // Set a cookie and redirect to root
         res.cookie("pToken", token, { maxAge: 900000, httpOnly: true });
-        return res.status(200).send({status: 200, message: "Success: Logged in", token: token})
+        return res.status(200).json({status: 200, message: "Success: Logged in", token: token})
       });
     })
     .catch(err => {
       console.log(err);
-      return res.status(401).json({status: 401, message: "Failed: Unauthorized login"})
+      return res.status(401).json({status: 403, message: "Failed: Unauthorized login"})
     });
   });
   

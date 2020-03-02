@@ -14,6 +14,9 @@ UserSchema.pre("save", function(next) {
 
   // ENCRYPT PASSWORD
   const user = this;
+  if (!user.isModified("password")) {
+    return next();
+  }
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(user.password, salt, (err, hash) => {
       user.password = hash;

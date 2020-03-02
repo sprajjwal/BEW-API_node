@@ -1,5 +1,3 @@
-const express = require('express')
-const app = express()
 const port = 3000
 require('dotenv').config();
 
@@ -8,6 +6,13 @@ const expressValidator = require('express-validator');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const checkUser = require("./utils/checkUser")
+
+// enabling cors
+const cors = require('cors');
+const express = require('express');
+let app = express();
+app.use(cors());
+app.options('*', cors());
 
 // Use Body Parser
 app.use(bodyParser.json());

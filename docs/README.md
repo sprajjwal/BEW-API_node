@@ -27,7 +27,7 @@ This is a RESTful API that supports CRUDing over several resources. A standard r
               }
 ```
 
-### Methods for Students
+### Methods
 
 #### Signup
 
