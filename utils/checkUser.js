@@ -4,21 +4,20 @@ const jwt = require('jsonwebtoken')
 const checkUser = (req, res, next) => {
   console.log("Checking authentication");
 
-  if ((typeof req.body.token === "undefined" || req.body.token === null) || (typeof req.query.token === "undefined"
-  || req.query.token === null)) {
+  if ( req.body.token !== null || req.query.token !== null) {
     let token = "";
-    if (req.body.token != null) {
-      token = req.body.token;
-    } else {
+    if (req.query.token != null) {
       token = req.query.token;
+    } else {
+      token = req.body.token;
     }
     const decodedToken = jwt.decode(token, { complete: true }) || {};
+    console.log("user found")
     req.user = decodedToken.payload;
   } else {
     req.user = null;
     console.log("no user")
   }
-
   next();
 };
 

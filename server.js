@@ -35,7 +35,7 @@ require('./data/proposals-db');
 require("./controllers/users")(app);
 require("./controllers/proposals")(app);
 
-app.get('/', (req, res) => { res.send("hello world")})
+app.get('/', (req, res) => { res.redirect('https://sprajjwal.github.io/BEW-API_node/#/')})
 app.listen(process.env.PORT ||port, () => console.log(`Example app listening on port ${port}!`))
 
 module.exports = app;

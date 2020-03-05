@@ -13,6 +13,9 @@ module.exports = (app) => {
       .then(user => {
         proposal.author = user.username
         user.outgoing_proposals.push(proposal);
+        if (user.username === req.body.recipient) {
+          return res.status(401).send({status: 401, message: "Error", err: err})
+        }
         User.findOne({username: req.body.recipient})
           .then(rec => {
             rec.incoming_proposals.push(proposal)
@@ -42,7 +45,10 @@ module.exports = (app) => {
             id: index, 
             title: proposal.title, 
             summary: proposal.summary, 
-            recipient: proposal.recipient}
+            recipient: proposal.recipient,
+            approved: proposal.approved,
+            denied: proposal.denied
+          }
         })
         return res.status(200).send({status: 200, message: "Success:", proposals: payload})
       })
@@ -60,12 +66,16 @@ module.exports = (app) => {
     
     User.findById(req.user._id)
       .then(user => {
+        console.log("___________________")
+        console.log(user)
         const payload = user.incoming_proposals.map(function(proposal, index) {
           return {
             id: index, 
             title: proposal.title, 
             summary: proposal.summary, 
             author: proposal.author,
+            approved: proposal.approved,
+            denied: proposal.denied
           }
         })
         return res.status(200).send({status: 200, message: "Success:", proposals: payload})
@@ -93,7 +103,9 @@ module.exports = (app) => {
             return res.send({
               title: proposal.title, 
               summary: proposal.summary,
-              recipient: recipient.username
+              recipient: recipient.username,
+              approved: proposal.approved,
+              denied: proposal.denied
             })
           })
           
@@ -123,7 +135,8 @@ module.exports = (app) => {
               title: proposal.title, 
               summary: proposal.summary,
               author: author.username,
-              approved: proposal.approved
+              approved: proposal.approved,
+              denied: proposal.denied
             })
           })
           
@@ -199,8 +212,30 @@ module.exports = (app) => {
         Proposal.findById(user.incoming_proposals[num]._id)
           .then(proposal => {
             proposal.approved = true
+            proposal.denied = false
             proposal.save()
             return res.status(200).send({status: 200, message: "Success: Proposal approved"})
+          })
+      })
+      .catch(err => {
+        console.log(err)
+        return res.status(401).send({status: 401, message: "Error", err: err})
+      })
+  })
+
+  app.post('/incoming_proposals/:id/deny', (req, res) => {
+    if (!req.user) {
+      return res.send({status: 401, message: "Unauthenticated request"})
+    }
+    const num = parseInt(req.params.id)
+    User.findById(req.user._id)
+      .then(user => {
+        Proposal.findById(user.incoming_proposals[num]._id)
+          .then(proposal => {
+            proposal.denied = true
+            proposal.approved = false
+            proposal.save()
+            return res.status(200).send({status: 200, message: "Success: Proposal denied"})
           })
       })
       .catch(err => {
